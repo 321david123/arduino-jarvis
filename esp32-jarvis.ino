@@ -1,4 +1,3 @@
-// ESP32 Jarvis Test - LED, WiFi, Bluetooth
 #include <WiFi.h>
 #include <BluetoothSerial.h>
 
