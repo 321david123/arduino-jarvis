@@ -1,0 +1,83 @@
+ESP32 Jarvis - Required Libraries Installation Guide
+=======================================================
+
+STEP 1: Install ESP32 Board Support
+------------------------------------
+1. Open Arduino IDE
+2. Go to: File → Preferences
+3. In "Additional Board Manager URLs", add:
+   https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+4. Go to: Tools → Board → Board Manager
+5. Search for "ESP32"
+6. Install "ESP32 by Espressif Systems"
+
+STEP 2: Install Required Libraries
+-----------------------------------
+Open: Sketch → Include Library → Manage Libraries
+
+Then search and install the following:
+
+1. Adafruit GFX Library
+   Author: Adafruit
+   Version: Latest stable version
+   
+2. Adafruit SSD1306
+   Author: Adafruit
+   Version: Latest stable version
+   Dependencies: Will auto-install Adafruit BusIO
+
+BUILT-IN LIBRARIES (No installation needed):
+---------------------------------------------
+These come with ESP32 board support:
+- WiFi.h
+- BluetoothSerial.h
+- Wire.h
+- driver/i2s.h
+
+STEP 3: Board Configuration
+----------------------------
+After installing libraries, configure your board:
+1. Tools → Board → ESP32 Arduino → ESP32 Dev Module
+2. Tools → Upload Speed → 115200
+3. Tools → Flash Frequency → 80MHz
+4. Tools → Flash Mode → QIO
+5. Tools → Flash Size → 4MB (32Mb)
+6. Tools → Partition Scheme → Default 4MB with spiffs
+7. Tools → Core Debug Level → None (or "Info" for debugging)
+8. Tools → Port → [Select your ESP32 COM port]
+
+VERIFICATION:
+-------------
+To verify everything is installed correctly:
+1. Open the esp32-jarvis.ino file
+2. Click the Verify button (checkmark icon)
+3. You should see "Done compiling" at the bottom
+4. If successful, you're ready to upload!
+
+TROUBLESHOOTING:
+----------------
+If compilation fails:
+
+Error: "WiFi.h: No such file or directory"
+→ Solution: ESP32 board support not installed correctly. Reinstall ESP32 boards.
+
+Error: "Adafruit_GFX.h: No such file or directory"  
+→ Solution: Install Adafruit GFX Library from Library Manager
+
+Error: "Adafruit_SSD1306.h: No such file or directory"
+→ Solution: Install Adafruit SSD1306 from Library Manager
+
+Error: "driver/i2s.h: No such file or directory"
+→ Solution: Make sure ESP32 board is selected in Tools → Board
+
+Error: A fatal error occurred: Failed to connect to ESP32
+→ Solution: Check USB cable, try different port, hold BOOT button while uploading
+
+LIBRARY VERSIONS TESTED:
+------------------------
+- ESP32 Board Support: v2.0.x or higher
+- Adafruit GFX Library: v1.11.x or higher  
+- Adafruit SSD1306: v2.5.x or higher
+
+All libraries should work with latest stable versions.
+

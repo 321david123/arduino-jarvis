@@ -1,0 +1,215 @@
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                    ESP32 JARVIS - PIN REFERENCE CARD                      ║
+║                         Quick Wiring Cheat Sheet                          ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                            ESP32 PIN LAYOUT                             │
+└─────────────────────────────────────────────────────────────────────────┘
+
+                          ┌──────────────┐
+                          │              │
+                      3V3 │●            ●│ GND
+                          │              │
+                     EN/○ │●            ●│ GPIO23
+                          │              │
+                  GPIO36/○ │●            ●│ GPIO22 ──→ OLED SCL
+                          │              │
+                  GPIO39/○ │●            ●│ GPIO1/TX
+                          │              │
+                  GPIO34/○ │●            ●│ GPIO3/RX
+                          │              │
+                  GPIO35/○ │●            ●│ GPIO21 ──→ OLED SDA
+                          │              │
+                  GPIO32/○ │● ←──MIC SD   ●│ GPIO19
+                          │              │
+                  GPIO33/○ │●            ●│ GPIO18
+                          │              │
+                  GPIO25/○ │●            ●│ GPIO5
+                          │              │
+                  GPIO26/○ │●            ●│ GPIO17
+                          │              │
+                  GPIO27/○ │●            ●│ GPIO16
+                          │              │
+   MIC SCK ──→    GPIO14/○ │●            ●│ GPIO4
+                          │              │
+   MIC WS ───→    GPIO15/○ │●            ●│ GPIO0
+                          │              │
+   LED ───────→    GPIO2/○ │●            ●│ GPIO2
+                          │              │
+                      GND │●            ●│ 5V
+                          │              │
+                          └──────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                        COMPONENT CONNECTIONS                            │
+└─────────────────────────────────────────────────────────────────────────┘
+
+╔═══════════════════════════════════════════════════════════════════════╗
+║  INMP441 MICROPHONE MODULE (I2S Interface)                            ║
+╠═══════════════════════════════════════════════════════════════════════╣
+║                                                                       ║
+║   INMP441 Pin    →    ESP32 Pin    →    Function                     ║
+║   ═══════════════════════════════════════════════════                ║
+║      VDD         →      3.3V        →    Power Supply                ║
+║      GND         →      GND         →    Ground                      ║
+║      SCK         →      GPIO14      →    Serial Clock (BCLK)         ║
+║      WS          →      GPIO15      →    Word Select (LRCLK)         ║
+║      SD          →      GPIO32      →    Serial Data (DOUT)          ║
+║      L/R         →      GND         →    Channel Select (Left)       ║
+║                                                                       ║
+║   ⚠️  IMPORTANT: L/R pin MUST be connected to GND!                    ║
+║                                                                       ║
+╚═══════════════════════════════════════════════════════════════════════╝
+
+╔═══════════════════════════════════════════════════════════════════════╗
+║  0.96" OLED DISPLAY (I2C Interface, SSD1306)                          ║
+╠═══════════════════════════════════════════════════════════════════════╣
+║                                                                       ║
+║   OLED Pin       →    ESP32 Pin    →    Function                     ║
+║   ═══════════════════════════════════════════════════                ║
+║      VCC         →      3.3V        →    Power Supply                ║
+║                         (or 5V)                                       ║
+║      GND         →      GND         →    Ground                      ║
+║      SCL         →      GPIO22      →    I2C Clock                   ║
+║      SDA         →      GPIO21      →    I2C Data                    ║
+║                                                                       ║
+║   📝 NOTE: I2C Address is 0x3C                                        ║
+║   💡 TIP: If 3.3V doesn't work, try 5V for VCC                       ║
+║                                                                       ║
+╚═══════════════════════════════════════════════════════════════════════╝
+
+╔═══════════════════════════════════════════════════════════════════════╗
+║  BUILT-IN LED (Status Indicator)                                      ║
+╠═══════════════════════════════════════════════════════════════════════╣
+║                                                                       ║
+║      GPIO2       →    Built-in LED (usually blue)                    ║
+║                                                                       ║
+║   Behavior: Blinks to show activity, flashes on loud sounds          ║
+║                                                                       ║
+╚═══════════════════════════════════════════════════════════════════════╝
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         POWER CONNECTIONS                               │
+└─────────────────────────────────────────────────────────────────────────┘
+
+    3.3V Pin  ───→  INMP441 VDD
+              ├───→  OLED VCC (or use 5V)
+              
+    GND Pin   ───→  INMP441 GND
+              ├───→  INMP441 L/R
+              └───→  OLED GND
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                       COMPLETE PIN SUMMARY                              │
+└─────────────────────────────────────────────────────────────────────────┘
+
+╔══════════╦═════════════╦════════════════════════════════════════════════╗
+║ ESP32    ║ Connected   ║ Description                                    ║
+║ Pin      ║ To          ║                                                ║
+╠══════════╬═════════════╬════════════════════════════════════════════════╣
+║ 3.3V     ║ VDD pins    ║ Power for INMP441 & OLED                       ║
+║ GND      ║ GND pins    ║ Common ground for all components               ║
+║ GPIO2    ║ Built-in    ║ Status LED                                     ║
+║ GPIO14   ║ INMP441 SCK ║ I2S Serial Clock                               ║
+║ GPIO15   ║ INMP441 WS  ║ I2S Word Select                                ║
+║ GPIO21   ║ OLED SDA    ║ I2C Data Line                                  ║
+║ GPIO22   ║ OLED SCL    ║ I2C Clock Line                                 ║
+║ GPIO32   ║ INMP441 SD  ║ I2S Serial Data                                ║
+╚══════════╩═════════════╩════════════════════════════════════════════════╝
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                       WIRE COLOR SUGGESTIONS                            │
+└─────────────────────────────────────────────────────────────────────────┘
+
+    🔴 RED      →  Power connections (3.3V, 5V)
+    ⚫ BLACK    →  Ground connections (GND)
+    🟡 YELLOW   →  I2C/I2S Clock signals (SCL, SCK)
+    🟢 GREEN    →  I2C/I2S Data signals (SDA, SD, WS)
+    🔵 BLUE     →  Other signals
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                        WIRING CHECKLIST                                 │
+└─────────────────────────────────────────────────────────────────────────┘
+
+Before connecting power, verify:
+
+  OLED Display:
+  □ VCC → 3.3V (or 5V)
+  □ GND → GND
+  □ SCL → GPIO22
+  □ SDA → GPIO21
+
+  INMP441 Microphone:
+  □ VDD → 3.3V
+  □ GND → GND
+  □ SCK → GPIO14
+  □ WS  → GPIO15
+  □ SD  → GPIO32
+  □ L/R → GND  ⚠️ CRITICAL!
+
+  Final Checks:
+  □ No loose connections
+  □ No short circuits between pins
+  □ All power connections correct
+  □ All ground connections in place
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                        SIGNAL SPECIFICATIONS                            │
+└─────────────────────────────────────────────────────────────────────────┘
+
+╔═══════════════════════════════════════════════════════════════════════╗
+║ I2S Audio (INMP441)                                                   ║
+╠═══════════════════════════════════════════════════════════════════════╣
+║  Sample Rate:     16,000 Hz (16 kHz)                                  ║
+║  Bits per Sample: 32-bit                                              ║
+║  Channel:         Mono (Left channel)                                 ║
+║  Interface:       I2S (Inter-IC Sound)                                ║
+╚═══════════════════════════════════════════════════════════════════════╝
+
+╔═══════════════════════════════════════════════════════════════════════╗
+║ I2C Display (SSD1306)                                                 ║
+╠═══════════════════════════════════════════════════════════════════════╣
+║  I2C Address:     0x3C (60 decimal)                                   ║
+║  Resolution:      128 x 64 pixels                                     ║
+║  Color:           Monochrome (White on Black)                         ║
+║  Clock Speed:     100 kHz (standard I2C)                              ║
+╚═══════════════════════════════════════════════════════════════════════╝
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                          SAFETY NOTES                                   │
+└─────────────────────────────────────────────────────────────────────────┘
+
+  ⚠️  ALWAYS disconnect power before making wiring changes
+  ⚠️  DO NOT exceed 3.3V on any GPIO pin
+  ⚠️  Avoid short circuits between VCC and GND
+  ⚠️  Use proper USB cable (data + power, not power-only)
+  ⚠️  Keep components away from liquids and metal objects
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                    TROUBLESHOOTING QUICK TIPS                           │
+└─────────────────────────────────────────────────────────────────────────┘
+
+  Problem                   →   Check
+  ═══════════════════════════════════════════════════════════════════
+  OLED blank                →   SDA/SCL not swapped, try 5V for VCC
+  No audio detected         →   L/R pin connected to GND
+  Garbled display           →   I2C address (should be 0x3C)
+  No WiFi connection        →   Correct SSID/password, 2.4GHz network
+  Upload fails              →   Hold BOOT button, check USB cable
+
+
+╔═══════════════════════════════════════════════════════════════════════╗
+║                    PRINT THIS FOR EASY REFERENCE!                     ║
+╚═══════════════════════════════════════════════════════════════════════╝
+
+                          Happy Building! 🚀
+
