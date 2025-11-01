@@ -223,7 +223,7 @@ const char* phrases[] = {
   "Ask \"what's your favorite kind of chaos?\"",
   "Say \"you look like you tell good stories.\"",
   "Tell someone \"your laugh should be copyrighted.\"",
-  "Say \"I'll remember this moment unless snacks appear.\"
+  "Say \"I'll remember this moment unless snacks appear.\""
 };
 
 const int phraseCount = sizeof(phrases) / sizeof(phrases[0]);
@@ -339,9 +339,6 @@ void drawDisplay(unsigned long now) {
     display.setTextColor(SSD1306_WHITE);
     display.setCursor(SCREEN_WIDTH - 30, 0);
     display.print(countdown);
-    display.setTextSize(1);
-    display.setCursor(SCREEN_WIDTH - 15, 16);
-    display.print("s");
   } else {
     // Show "SPIN" during roulette
     display.setTextSize(1);
@@ -359,6 +356,14 @@ void drawSpiral() {
   // Animated hypnotic spiral
   spiralAngle += 0.15;
   spiralOffset += 0.05;
+  
+  // Wrap values to prevent overflow and keep animation smooth
+  if (spiralAngle > TWO_PI) {
+    spiralAngle -= TWO_PI;
+  }
+  if (spiralOffset > 20.0) {
+    spiralOffset -= 20.0;
+  }
   
   float centerX = SCREEN_WIDTH / 2;
   float centerY = SCREEN_HEIGHT / 2;
@@ -382,13 +387,16 @@ void drawSpiral() {
 }
 
 void drawWrappedText(String text, int x, int y, int maxWidth) {
-  display.setTextSize(1);
-  display.setTextColor(SSD1306_BLACK, SSD1306_WHITE);  // Inverted for readability
+  display.setTextSize(2);
+  display.setTextColor(SSD1306_WHITE);
   
   int cursorX = x;
   int cursorY = y;
-  int lineHeight = 10;
+  int lineHeight = 16;
   String word = "";
+  
+  int16_t x1, y1;
+  uint16_t w, h;
   
   for (int i = 0; i < text.length(); i++) {
     char c = text.charAt(i);
@@ -400,8 +408,6 @@ void drawWrappedText(String text, int x, int y, int maxWidth) {
       }
       
       // Check if word fits on current line
-      int16_t x1, y1;
-      uint16_t w, h;
       display.getTextBounds(word, cursorX, cursorY, &x1, &y1, &w, &h);
       
       if (cursorX + w > x + maxWidth && cursorX > x) {
@@ -412,8 +418,6 @@ void drawWrappedText(String text, int x, int y, int maxWidth) {
       
       // Stop if we run out of vertical space
       if (cursorY + lineHeight > SCREEN_HEIGHT) {
-        display.setCursor(x, cursorY);
-        display.print("...");
         return;
       }
       
@@ -425,7 +429,7 @@ void drawWrappedText(String text, int x, int y, int maxWidth) {
       // Add space
       if (c == ' ') {
         display.print(" ");
-        cursorX += 6;  // Approximate space width
+        cursorX += 11;  // Space width for size 2 text
       }
       
       word = "";
